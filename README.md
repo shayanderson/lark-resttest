@@ -78,7 +78,7 @@ class UserTest extends RestTest
         ]);
 
         // save IDs for later tests
-        $this->ids('users');
+        $this->ids('user');
     }
 
     /**
@@ -89,7 +89,8 @@ class UserTest extends RestTest
     public function deleteOne(): void
     {
         // get ID from earlier save in create method
-        $id = $this->id('users');
+        $id = $this->id('user');
+        // also can use $this->id('user', 1); to get ID at exact index
 
         $this->clientDelete('/users/' . $id);
 
@@ -106,6 +107,46 @@ If a method depends on another method, or multiple methods, the `@depends [METHO
 If a class depends on another class the `@depends [CLASSNAME]` annotation in the class docblock should be used, like `@depends \Tests\Rest\UserTest`.
 
 > All classes ending in `Test.php` will be considered tests. To exclude a class file ending in `Test.php` from tests use `@ignore` in the class docblock.
+
+### Comparing Response Body
+
+Sometimes a response body array of objects can be randomly ordered, which can cause a test to fail when using `RestTest::expectBodySame`. For example:
+
+```php
+    /**
+     * Update users
+     * @test
+     * @depends create
+     */
+    public function update(): void
+    {
+        $this->clientPatch('/users', [
+            [
+                'id' => $this->id('user', 1),
+                'name' => 'test5'
+            ],
+            [
+                'id' => $this->id('user', 2),
+                'name' => 'test6'
+            ]
+        ]);
+
+        // this will possibly fail depending on the order of objects
+        // returned in the response body
+        $this->expectBodySame([
+            [
+                'id' => $this->id('user', 1),
+                'name' => 'test5'
+            ],
+            [
+                'id' => $this->id('user', 2),
+                'name' => 'test6'
+            ]
+        ])
+    }
+```
+
+To get around this problem the `RestTest::expectBodySameSorted` method can be used to auto sort the expected array of objects and the response body array of objects by a specific field (`id` by default).
 
 ## Run Tests
 

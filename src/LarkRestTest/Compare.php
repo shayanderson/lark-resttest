@@ -75,6 +75,13 @@ class Compare
 
 			if (is_array($v))
 			{
+				if (!is_array($a2[$k]))
+				{
+					// 2nd must be array also
+					$diff[$k] = $v;
+					continue;
+				}
+
 				// compare arrays
 				$d = self::arraysRecurive($v, $a2[$k], $noCompareOnValue, $flip);
 
@@ -94,9 +101,9 @@ class Compare
 					]);
 				}
 
-				// 2nd must be object also
 				if (!is_object($a2[$k]))
 				{
+					// 2nd must be object also
 					$diff[$k] = $v;
 					continue;
 				}

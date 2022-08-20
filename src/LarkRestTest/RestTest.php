@@ -67,7 +67,6 @@ abstract class RestTest extends Assert
 	 * @var array|null
 	 */
 	private static ?array $testClientRequest = null;
-
 	/**
 	 * Test client response body
 	 *
@@ -137,7 +136,7 @@ abstract class RestTest extends Assert
 
 		// set for run access
 		self::$testClient = &$client;
-		self::$testClientRequest = [strtoupper($method), $url];
+		self::$testClientRequest = [strtoupper($method), $url, $client->getOptions()];
 
 		// store response
 		self::$testClientResponseBody = $client->{$method}($url, $params, $options);
@@ -296,6 +295,51 @@ abstract class RestTest extends Assert
 	}
 
 	/**
+	 * Expect response body same as $expected array or object with auto response body sorting
+	 *
+	 * @param array|object $expected
+	 * @param string|null $message
+	 * @return void
+	 */
+	final protected function expectBodySameSorted(
+		$expected,
+		string $sortField = 'id',
+		?string $message = null
+	): void
+	{
+		// auto encode/decode JSON to set correct types
+		$expected = JsonDecoder::decode(
+			json_encode($expected)
+		);
+
+		$resBody = self::responseBodyJsonDecoded();
+
+		if (!is_array($expected))
+		{
+			throw new RestTestException('Cannot auto sort $expected, must be array');
+		}
+
+		// sort expected by sort field
+		usort(
+			$expected,
+			fn (stdClass $a, stdClass $b) => strcmp($a->{$sortField}, $b->{$sortField})
+		);
+
+		if (!is_array($resBody))
+		{
+			throw new RestTestException('Cannot auto sort response body, must be array');
+		}
+
+		// sort response body by sort field
+		usort(
+			$resBody,
+			fn (stdClass $a, stdClass $b) => strcmp($a->{$sortField}, $b->{$sortField})
+		);
+
+		$this->assertResponseBodySame($expected, $resBody, $message);
+	}
+
+	/**
 	 * Expect response status code
 	 *
 	 * @param integer $code
@@ -322,10 +366,11 @@ abstract class RestTest extends Assert
 	 * IDs getter for specific name/test that can be used in tests
 	 *
 	 * @param string $name
+	 * @param int $index
 	 * @param boolean $clearId Will clear the ID
 	 * @return string
 	 */
-	final protected function id(string $name, bool $clearId = false): string
+	final protected function id(string $name, ?int $index = null, bool $clearId = false): string
 	{
 		if (!isset(self::$ids[$name]))
 		{
@@ -339,6 +384,32 @@ abstract class RestTest extends Assert
 			throw new RestTestException(
 				'Cannot get ID for name "' . $name . '", there are zero IDs for name'
 			);
+		}
+
+		// use index
+		if ($index !== null)
+		{
+			if ($index < 1)
+			{
+				throw new RestTestException('ID index must be greater than 1');
+			}
+
+			$indexOrig = $index;
+			$index -= 1;
+
+			if (!isset(self::$ids[$name][$index]))
+			{
+				throw new RestTestException('ID index ' . $indexOrig . ' does not exist');
+			}
+
+			if ($clearId)
+			{
+				$id = self::$ids[$name][$index];
+				unset(self::$ids[$name][$index]);
+				return $id;
+			}
+
+			return self::$ids[$name][$index];
 		}
 
 		if ($clearId)
@@ -547,6 +618,18 @@ abstract class RestTest extends Assert
 				self::echo(self::$testClientRequest[1]);
 				self::out()->dim($indent . 'Method: ', '');
 				self::echo(self::$testClientRequest[0]);
+
+				if (isset(self::$testClientRequest[2]['headers']))
+				{
+					$headers = '';
+					foreach (self::$testClientRequest[2]['headers'] as $k => $v)
+					{
+						$headers .= ($headers ? '; ' : null) . $k . ': ' . $v;
+					};
+
+					self::out()->dim($indent . 'Headers: ', '');
+					self::echo($headers);
+				}
 			}
 		};
 
@@ -675,11 +758,11 @@ abstract class RestTest extends Assert
 	}
 
 	/**
-	 * Output or return separator
+	 * Output separator
 	 *
 	 * @return void
 	 */
-	private static function sep(): void
+	protected static function sep(): void
 	{
 		$sep = str_repeat('-', 90);
 
