@@ -100,6 +100,7 @@ abstract class RestTest extends Assert
 	 */
 	final protected function client(string $baseUrl, array $options = [])
 	{
+		$this->clientReset();
 		$this->baseUrl = $baseUrl;
 		$this->options = $options + ['headers' => ['content-type' => 'application/json']];
 	}
@@ -128,7 +129,7 @@ abstract class RestTest extends Assert
 	 */
 	private function clientFetch(string $method, string $path, $params, array $options): Client
 	{
-		$this->client = null; // reset
+		$this->clientReset();
 
 		$client = &$this->clientUse(true);
 
@@ -196,6 +197,30 @@ abstract class RestTest extends Assert
 	final protected function clientPut(string $path, $params = null, array $options = []): Client
 	{
 		return $this->clientFetch('put', $path, self::jsonParams($params), $options);
+	}
+
+	/**
+	 * Request client
+	 *
+	 * @return void
+	 */
+	private function clientReset(): void
+	{
+		$this->client = null;
+		self::clientResetStatic();
+	}
+
+	/**
+	 * Request client static
+	 *
+	 * @return void
+	 */
+	private static function clientResetStatic(): void
+	{
+		self::$testClient = null;
+		self::$testClientRequest = null;
+		self::$testClientResponseBody = null;
+		self::$testClientResponseCode = null;
 	}
 
 	/**
@@ -391,7 +416,9 @@ abstract class RestTest extends Assert
 		{
 			if ($index < 1)
 			{
-				throw new RestTestException('ID index must be greater than 1');
+				throw new RestTestException(
+					'ID index must be greater than 1 for name "' .  $name . '"'
+				);
 			}
 
 			$indexOrig = $index;
@@ -399,7 +426,9 @@ abstract class RestTest extends Assert
 
 			if (!isset(self::$ids[$name][$index]))
 			{
-				throw new RestTestException('ID index ' . $indexOrig . ' does not exist');
+				throw new RestTestException(
+					'ID index ' . $indexOrig . ' does not exist for name "' . $name . '"'
+				);
 			}
 
 			if ($clearId)
@@ -463,6 +492,35 @@ abstract class RestTest extends Assert
 				'class' => static::class,
 				'responseBody' => $res
 			]
+		);
+	}
+
+	/**
+	 * Clear all IDs by name
+	 *
+	 * @param string $name
+	 * @return void
+	 */
+	final protected function idsClear(string $name): void
+	{
+		if (!isset(self::$ids[$name]))
+		{
+			throw new RestTestException('IDs not found for name "' . $name . '"');
+		}
+
+		unset(self::$ids[$name]);
+	}
+
+	/**
+	 * IDs by name getter
+	 *
+	 * @param string $name
+	 * @return array
+	 */
+	final protected function idsGet(string $name): array
+	{
+		return self::$ids[$name] ?? throw new RestTestException(
+			'IDs not found for name "' . $name . '"'
 		);
 	}
 
@@ -678,9 +736,14 @@ abstract class RestTest extends Assert
 				{
 					$testTimer = new Timer;
 					$testResult->addTest($testMethod);
-					$testObj->{$testMethod->getName()}();
+					$fn = $testObj->{$testMethod->getName()}();
 
 					$testResult->ok($testTimer, self::$testClientResponseCode);
+
+					if (is_callable($fn))
+					{
+						$fn();
+					}
 
 					if ($debug)
 					{
@@ -690,10 +753,7 @@ abstract class RestTest extends Assert
 					}
 
 					// always reset
-					self::$testClient = null;
-					self::$testClientRequest = null;
-					self::$testClientResponseBody = null;
-					self::$testClientResponseCode = null;
+					self::clientResetStatic();
 				}
 			}
 

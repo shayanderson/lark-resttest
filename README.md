@@ -108,6 +108,26 @@ If a class depends on another class the `@depends [CLASSNAME]` annotation in the
 
 > All classes ending in `Test.php` will be considered tests. To exclude a class file ending in `Test.php` from tests use `@ignore` in the class docblock.
 
+### Cleanup Callable
+
+A test method can return a `callable` that is used as a cleanup function and will be called after the test method has been called, example:
+
+```php
+    /**
+     * Delete user
+     * @test
+     * @depends create
+     */
+    public function deleteOne(): callable
+    {
+        // ...
+
+        return function() {
+            // do cleanup here
+        };
+    }
+```
+
 ### Comparing Response Body
 
 Sometimes a response body array of objects can be randomly ordered, which can cause a test to fail when using `RestTest::expectBodySame`. For example:

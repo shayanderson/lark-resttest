@@ -78,7 +78,10 @@ class Compare
 				if (!is_array($a2[$k]))
 				{
 					// 2nd must be array also
-					$diff[$k] = $v;
+					if ($a2[$k] !== $noCompareOnValue)
+					{
+						$diff[$k] = $v;
+					}
 					continue;
 				}
 
@@ -91,7 +94,7 @@ class Compare
 					unset($d);
 				}
 			}
-			if (is_object($v))
+			else if (is_object($v))
 			{
 				// can only compare stdClass
 				if (!$v instanceof stdClass)
@@ -104,7 +107,10 @@ class Compare
 				if (!is_object($a2[$k]))
 				{
 					// 2nd must be object also
-					$diff[$k] = $v;
+					if ($a2[$k] !== $noCompareOnValue)
+					{
+						$diff[$k] = $v;
+					}
 					continue;
 				}
 

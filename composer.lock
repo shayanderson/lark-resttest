@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a99464d3f5d36b89163f7c3e09d14a6b",
+    "content-hash": "02ee62c60eb311790873b222601ffd13",
     "packages": [
         {
             "name": "jean85/pretty-package-versions",
@@ -67,20 +67,20 @@
         },
         {
             "name": "lark/framework",
-            "version": "0.0.0",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shayanderson/lark-framework.git",
-                "reference": "6090ffb47b41f169d7b32f293bfee7d70a04b497"
+                "reference": "26476d7e14906c5b83d590769e2d1e45993b4708"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shayanderson/lark-framework/zipball/6090ffb47b41f169d7b32f293bfee7d70a04b497",
-                "reference": "6090ffb47b41f169d7b32f293bfee7d70a04b497",
+                "url": "https://api.github.com/repos/shayanderson/lark-framework/zipball/26476d7e14906c5b83d590769e2d1e45993b4708",
+                "reference": "26476d7e14906c5b83d590769e2d1e45993b4708",
                 "shasum": ""
             },
             "require": {
-                "mongodb/mongodb": "^1.5"
+                "mongodb/mongodb": "^1.9"
             },
             "type": "library",
             "autoload": {
@@ -111,26 +111,26 @@
                 "issues": "https://github.com/shayanderson/lark-framework/issues",
                 "source": "https://github.com/shayanderson/lark-framework"
             },
-            "time": "2022-07-27T14:28:54+00:00"
+            "time": "2022-09-03T14:02:19+00:00"
         },
         {
             "name": "mongodb/mongodb",
-            "version": "1.12.0",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mongodb/mongo-php-library.git",
-                "reference": "e4a7594ac4b31635fa77455c4038a7013024ba28"
+                "reference": "a9d82890fe0c104cf795e6c759c92484d12c027a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/e4a7594ac4b31635fa77455c4038a7013024ba28",
-                "reference": "e4a7594ac4b31635fa77455c4038a7013024ba28",
+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/a9d82890fe0c104cf795e6c759c92484d12c027a",
+                "reference": "a9d82890fe0c104cf795e6c759c92484d12c027a",
                 "shasum": ""
             },
             "require": {
                 "ext-hash": "*",
                 "ext-json": "*",
-                "ext-mongodb": "^1.13.0",
+                "ext-mongodb": "^1.14.0",
                 "jean85/pretty-package-versions": "^1.2 || ^2.0.1",
                 "php": "^7.2 || ^8.0",
                 "symfony/polyfill-php80": "^1.19"
@@ -143,7 +143,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.12.x-dev"
+                    "dev-master": "1.13.x-dev"
                 }
             },
             "autoload": {
@@ -178,9 +178,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mongodb/mongo-php-library/issues",
-                "source": "https://github.com/mongodb/mongo-php-library/tree/1.12.0"
+                "source": "https://github.com/mongodb/mongo-php-library/tree/1.13.0"
             },
-            "time": "2022-03-23T20:18:39+00:00"
+            "time": "2022-07-14T05:07:37+00:00"
         },
         {
             "name": "symfony/polyfill-php80",

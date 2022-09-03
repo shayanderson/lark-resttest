@@ -162,12 +162,12 @@ class TestResult
 		}
 
 		$this->out->$colorProp->echo(
-			$this->class->getName()
+			ltrim($this->class->getName(), '\\')
 				. (isset($this->method) ? '::' . $this->method->getName() : null),
 			''
 		);
 
-		$this->out->echo('   ', '');
+		$this->out->echo('  ', '');
 
 		if (isset($this->method) && $this->method->hasDescription())
 		{
