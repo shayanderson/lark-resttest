@@ -15,6 +15,7 @@ use Lark\Cli\Output;
 use Lark\Exception as LarkException;
 use Lark\Http\Client;
 use Lark\Json\Decoder as JsonDecoder;
+use Lark\Map\Path as MapPath;
 use Lark\Timer;
 use stdClass;
 use Throwable;
@@ -254,6 +255,66 @@ abstract class RestTest extends Assert
 		}
 
 		return $this->client;
+	}
+
+	/**
+	 * Duplicate objects for tests
+	 *
+	 * @param array $doc Like [name => x]
+	 * @param integer $count Number of times to duplicate in return array
+	 * @param array $appendFields Fields to append value, like [name]
+	 * @return array
+	 */
+	public static function &duplicate(
+		array $doc,
+		int $count,
+		array $appendFields = [],
+		int $startStep = 0
+	): array
+	{
+		$a = [];
+
+		for ($i = $startStep; $i < $count + $startStep; $i++)
+		{
+			$tmpDoc = $doc;
+
+			if ($appendFields)
+			{
+				foreach ($appendFields as $field)
+				{
+					if (!MapPath::has($tmpDoc, $field))
+					{
+						throw new RestTestException(
+							'Cannot duplicate document, append field does not exist in document',
+							[
+								'doc' => $tmpDoc,
+								'appendField' => $field
+							]
+						);
+					}
+
+					$currVal = MapPath::get($tmpDoc, $field);
+					$newVal = null;
+
+					switch (gettype($currVal))
+					{
+						case 'integer':
+							$newVal = $currVal + $i;
+							break;
+
+						default:
+							$newVal = $currVal . $i;
+							break;
+					}
+
+					MapPath::set($tmpDoc, $field, $newVal);
+				}
+			}
+
+			$a[] = $tmpDoc;
+		}
+
+		return $a;
 	}
 
 	/**

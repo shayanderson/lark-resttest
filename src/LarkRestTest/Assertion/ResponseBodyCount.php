@@ -20,6 +20,13 @@ use Countable;
 class ResponseBodyCount extends Assertion
 {
 	/**
+	 * Actual count
+	 *
+	 * @var integer
+	 */
+	private int $actualCount = 0;
+
+	/**
 	 * Count
 	 *
 	 * @var integer
@@ -44,7 +51,8 @@ class ResponseBodyCount extends Assertion
 		if (!$this->test($responseBody))
 		{
 			throw new AssertFailedException($message ?? f(
-				'Response body count is not {}',
+				'Response body count {} is not expected count {}',
+				$this->actualCount,
 				$this->count
 			), ['responseBody' => $responseBody]);
 		}
@@ -60,6 +68,8 @@ class ResponseBodyCount extends Assertion
 			return false;
 		}
 
-		return count($responseBody) === $this->count;
+		$this->actualCount = count($responseBody);
+
+		return $this->actualCount === $this->count;
 	}
 }

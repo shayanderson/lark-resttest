@@ -181,8 +181,8 @@ Running tests...
   Base directory: /myproject/tests/Rest
   Test classes: 1
 ------------------------------------------------------------------------------------------
-001) 200 \Tests\Rest\UserTest::create    # Create users [0.0475s]
-002) 200 \Tests\Rest\UserTest::deleteOne    # Delete user [0.0312s]
+001) 200 Tests\Rest\UserTest::create    # Create users [0.0475s]
+002) 200 Tests\Rest\UserTest::deleteOne    # Delete user [0.0312s]
 ------------------------------------------------------------------------------------------
  OK  (Tests: 2, Assertions: 4) in 0.0874s
 ```
