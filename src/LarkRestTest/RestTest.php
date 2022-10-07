@@ -136,12 +136,20 @@ abstract class RestTest extends Assert
 
 		$url = $this->baseUrl . '/' . ltrim($path, '/');
 
+		// merge existing client options with test options
+		if ($options)
+		{
+			$client->setOptions(
+				array_merge_recursive($options, $client->getOptions())
+			);
+		}
+
 		// set for run access
 		self::$testClient = &$client;
 		self::$testClientRequest = [strtoupper($method), $url, $client->getOptions()];
 
 		// store response
-		self::$testClientResponseBody = $client->{$method}($url, $params, $options);
+		self::$testClientResponseBody = $client->{$method}($url, $params);
 
 		self::$testClientResponseCode = $client->statusCode();
 
@@ -777,9 +785,19 @@ abstract class RestTest extends Assert
 				$classNames[] = $class->getName();
 			}
 
-			self::out()->dim('  Test classes: ', '');
+			self::out()->dim('  Total test classes: ', '');
 			self::echo(count($classes));
 			self::sep();
+
+			if ($debug)
+			{
+				self::out()->dim('  Test Classes:');
+				foreach (array_keys($classes) as $tClass)
+				{
+					self::out()->dim('    ' . $tClass);
+				}
+				self::sep();
+			}
 
 			foreach ($classes as $testClass)
 			{
