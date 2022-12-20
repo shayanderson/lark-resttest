@@ -581,6 +581,16 @@ abstract class RestTest extends Assert
 	}
 
 	/**
+	 * Clear all IDs
+	 *
+	 * @return void
+	 */
+	final protected function idsClearAll(): void
+	{
+		self::$ids = [];
+	}
+
+	/**
 	 * IDs by name getter
 	 *
 	 * @param string $name

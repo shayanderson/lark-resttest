@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18eadf6534218ecb471aea493f38f941",
+    "content-hash": "142f38acc4a487071aa78c7ecb3a49f9",
     "packages": [
         {
             "name": "jean85/pretty-package-versions",
@@ -67,16 +67,16 @@
         },
         {
             "name": "lark/framework",
-            "version": "0.11.0",
+            "version": "0.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shayanderson/lark-framework.git",
-                "reference": "588d2d4d83e86865565f58d06fbedeb2a36daaf3"
+                "reference": "ec03af67d7ce74318001010023fb62eca0bbce14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shayanderson/lark-framework/zipball/588d2d4d83e86865565f58d06fbedeb2a36daaf3",
-                "reference": "588d2d4d83e86865565f58d06fbedeb2a36daaf3",
+                "url": "https://api.github.com/repos/shayanderson/lark-framework/zipball/ec03af67d7ce74318001010023fb62eca0bbce14",
+                "reference": "ec03af67d7ce74318001010023fb62eca0bbce14",
                 "shasum": ""
             },
             "require": {
@@ -111,7 +111,7 @@
                 "issues": "https://github.com/shayanderson/lark-framework/issues",
                 "source": "https://github.com/shayanderson/lark-framework"
             },
-            "time": "2022-11-10T20:41:57+00:00"
+            "time": "2022-12-20T14:39:14+00:00"
         },
         {
             "name": "mongodb/mongodb",
