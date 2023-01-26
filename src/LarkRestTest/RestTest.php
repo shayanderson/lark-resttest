@@ -574,7 +574,7 @@ abstract class RestTest extends Assert
 	{
 		if (!isset(self::$ids[$name]))
 		{
-			throw new RestTestException('IDs not found for name "' . $name . '"');
+			return;
 		}
 
 		unset(self::$ids[$name]);
